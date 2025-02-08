@@ -1,0 +1,23 @@
+{
+  "title": "Inscription des membres de la famille Gad",
+  "description": "Veuillez remplir le formulaire pour vous inscrire.",
+  "fullName": "Nom complet",
+  "dob": "Date de naissance",
+  "gender": "Genre",
+  "maritalStatus": "État civil",
+  "phone": "Numéro de téléphone",
+  "email": "E-mail",
+  "nationalID": "ID National",
+  "profession": "Profession",
+  "studied": "Domaine d'étude",
+  "churchCell": "Cellule d'église",
+  "province": "Province",
+  "district": "District",
+  "sector": "Secteur",
+  "cell": "Cellule",
+  "village": "Village",
+  "next": "Suivant",
+  "back": "Retour",
+  "submit": "Soumettre",
+  "helpText": "Besoin d'aide ? Appelez-nous au {phone}"
+}

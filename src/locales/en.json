@@ -1,0 +1,23 @@
+{
+  "title": "Gad Family Members Registration",
+  "description": "Please fill out the form to register as a family member.",
+  "fullName": "Full Name",
+  "dob": "Date of Birth",
+  "gender": "Gender",
+  "maritalStatus": "Marital Status",
+  "phone": "Phone Number",
+  "email": "Email",
+  "nationalID": "National ID",
+  "profession": "Profession",
+  "studied": "Field of Study",
+  "churchCell": "Church Cell",
+  "province": "Province",
+  "district": "District",
+  "sector": "Sector",
+  "cell": "Cell",
+  "village": "Village",
+  "next": "Next",
+  "back": "Back",
+  "submit": "Submit",
+  "helpText": "Need help? Call us at {phone}"
+}

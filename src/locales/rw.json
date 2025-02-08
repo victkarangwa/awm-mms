@@ -1,0 +1,23 @@
+{
+  "title": "Kwiyandikisha kw'Abagize Umuryango wa Gad",
+  "description": "Nyamuneka wuzuze iyi fomu kugira ngo wiyandikishe nk'umunyamuryango.",
+  "fullName": "Amazina yose",
+  "dob": "Itariki y'amavuko",
+  "gender": "Igitsina",
+  "maritalStatus": "Irangamimerere",
+  "phone": "Nimero ya telefone",
+  "email": "Imeri",
+  "nationalID": "Indangamuntu",
+  "profession": "Umwuga",
+  "studied": "Icyo wize",
+  "churchCell": "Cellure y'itorero",
+  "province": "Intara",
+  "district": "Akarere",
+  "sector": "Umurenge",
+  "cell": "Akagari",
+  "village": "Umudugudu",
+  "next": "Komeza",
+  "back": "Subira inyuma",
+  "submit": "Ohereza",
+  "helpText": "Ufite ikibazo? Duhamagare kuri {phone}"
+}

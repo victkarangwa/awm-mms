@@ -3,9 +3,12 @@
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { Card, CardContent, CardHeader } from "@/components/ui/card"; // A component you may already have for displaying text styles
+import { useTranslation } from "react-i18next";
+import "@/lib/i18n"; // Import i18n setup
 
 export default function WelcomePage() {
   const router = useRouter();
+  // const { t, i18n } = useTranslation();
 
   return (
     <div className="p-6 max-w-lg mx-auto">
