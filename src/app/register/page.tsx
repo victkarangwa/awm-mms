@@ -502,7 +502,7 @@ export default function Register() {
       <Button
         className="my-2 w-full underline"
         variant="link"
-        onClick={() => router.push("/")}
+        onClick={() => router.push("/check")}
       >
         Check if already registered
       </Button>
