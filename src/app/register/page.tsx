@@ -1,21 +1,21 @@
 "use client";
 
-import React, { useRef, useState } from "react";
-import { db } from "@/lib/firebaseConfig";
-import { ref, get, set, push } from "firebase/database";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { CheckCircle, Loader2 } from "lucide-react";
-import { Progress } from "@/components/ui/progress";
-import { useRouter } from "next/navigation";
-import { useForm } from "react-hook-form";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Progress } from "@/components/ui/progress";
+import { db } from "@/lib/firebaseConfig";
+import { get, push, ref } from "firebase/database";
+import { CheckCircle, Loader2 } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useRef, useState } from "react";
+import { useForm } from "react-hook-form";
 
 interface RegistrationData {
   names: string;
@@ -82,6 +82,7 @@ export default function Register() {
     if (snapshot.exists()) {
       const users = snapshot.val(); // Get all users
       const userExists = Object.values(users).some(
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (user: any) => user.nationalID === id
       );
 
