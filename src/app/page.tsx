@@ -80,6 +80,7 @@ export default function Home() {
                     value: 16,
                     message: "National ID must not exceed 16 digits",
                   },
+                  setValueAs: (value) => value.trim(), // Trim input before validation
                 })}
               />
               {errors.nationalID && (
@@ -96,22 +97,25 @@ export default function Home() {
             >
               {isSubmitting ? <Loader2 className="animate-spin" /> : "Check"}
             </Button>
-            <div className="relative flex items-center my-4">
-              <div className="w-full border-t border-gray-300"></div>
-              <span className="px-3 text-gray-500 text-sm">OR</span>
-              <div className="w-full border-t border-gray-300"></div>
-            </div>
-            <Button
-              className="my-2 w-full"
-              variant="secondary"
-              onClick={() => router.push("/register")}
-            >
-              Register
-            </Button>
           </form>
+          <div className="relative flex items-center my-4">
+            <div className="w-full border-t border-gray-300"></div>
+            <span className="px-3 text-gray-500 text-sm">OR</span>
+            <div className="w-full border-t border-gray-300"></div>
+          </div>
+          <Button
+            className="my-2 w-full"
+            variant="secondary"
+            onClick={() => router.push("/register")}
+          >
+            Register
+          </Button>
         </CardContent>
       </Card>
-
+      <div className="text-center mt-4 text-sm text-gray-600">
+        Need help? Call/Text us at
+        <span className="font-semibold text-orange-600"> +250 789 152 190</span>
+      </div>
       <Dialog open={showModal} onOpenChange={setShowModal}>
         <DialogContent>
           <DialogHeader>
@@ -169,11 +173,6 @@ export default function Home() {
               >
                 Close
               </Button>
-
-              {/* <p>Names: {modalData?.names}</p>
-              <p>National ID: {modalData?.nationalID}</p>
-              <p>Phone: {modalData?.phone}</p>
-              <p>Church Cell: {modalData?.churchCell}</p> */}
             </div>
           )}
         </DialogContent>

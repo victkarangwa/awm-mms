@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { db } from "@/lib/firebaseConfig";
-import { doc, setDoc } from "firebase/firestore";
+import { doc, getDoc, setDoc } from "firebase/firestore";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -45,23 +45,42 @@ const steps = [
 
 export default function Register() {
   const router = useRouter();
+  const formRef = useRef<HTMLFormElement>(null);
   const {
     register,
     handleSubmit,
     getValues,
     reset,
+    trigger,
     formState: { errors, isSubmitting },
   } = useForm<RegistrationData>();
 
   const [step, setStep] = useState(0);
   const [showModal, setShowModal] = useState<boolean>(false);
+  const [nationalIDExists, setNationalIDExists] = useState(false);
 
-  const handleNext = () => {
-    if (step < steps.length - 1) setStep(step + 1);
+  const handleNext = async () => {
+    const isValid = await trigger();
+    if (isValid && !nationalIDExists) {
+      if (step < steps.length - 1) setStep(step + 1);
+    }
   };
 
   const handleBack = () => {
     if (step > 0) setStep(step - 1);
+  };
+
+  const checkNationalID = async (id: string) => {
+    if (!id) return; // Exit if no ID is entered
+
+    const userRef = doc(db, "users", id);
+    const userSnap = await getDoc(userRef);
+
+    if (userSnap.exists()) {
+      setNationalIDExists(true); // ID is already registered
+    } else {
+      setNationalIDExists(false); // ID is available
+    }
   };
 
   const onSubmit = async (data: RegistrationData) => {
@@ -69,7 +88,8 @@ export default function Register() {
       const userRef = doc(db, "users", data.nationalID);
       data.isApproved = false;
       await setDoc(userRef, data);
-      router.push("/");
+      // router.push("/");
+      setShowModal(true);
     } catch (error) {
       console.log("Error: ", error);
     }
@@ -77,6 +97,11 @@ export default function Register() {
 
   return (
     <div className="p-6 max-w-lg mx-auto">
+      <CardHeader className="text-center">
+        <p className="text-sm text-gray-600 mt-1">
+          Please fill out the form to register as a family member.
+        </p>
+      </CardHeader>
       <Card>
         <CardHeader>
           <h2 className="text-xl font-bold">{steps[step]}</h2>
@@ -86,10 +111,41 @@ export default function Register() {
             value={(step / (steps.length - 1)) * 100}
             className="mb-4"
           />
-          <form onSubmit={handleSubmit(onSubmit)}>
+          <form ref={formRef} onSubmit={handleSubmit(onSubmit)}>
             {step === 0 && (
               <div className="space-y-4">
                 <div className="grid grid-cols-1 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700">
+                      National ID
+                    </label>
+                    <Input
+                      placeholder="Enter your National ID"
+                      {...register("nationalID", {
+                        required: "National ID is required",
+                        minLength: {
+                          value: 16,
+                          message: "National ID must be at least 16 digits",
+                        },
+                        maxLength: {
+                          value: 16,
+                          message: "National ID must not exceed 16 digits",
+                        },
+                        setValueAs: (value) => value.trim(), // Trim input before validation
+                      })}
+                      onBlur={(e) => checkNationalID(e.target.value)}
+                    />
+                    {errors.nationalID && (
+                      <p className="text-red-500 text-sm mt-1">
+                        {errors.nationalID?.message}
+                      </p>
+                    )}
+                    {nationalIDExists && (
+                      <p className="text-red-500 text-sm mt-1">
+                        This National ID is already registered
+                      </p>
+                    )}
+                  </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700">
                       Full Name
@@ -206,30 +262,6 @@ export default function Register() {
                     {errors.email && (
                       <p className="text-red-500 text-sm mt-1">
                         {errors.email?.message}
-                      </p>
-                    )}
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700">
-                      National ID
-                    </label>
-                    <Input
-                      placeholder="Enter your National ID"
-                      {...register("nationalID", {
-                        required: "National ID is required",
-                        minLength: {
-                          value: 16,
-                          message: "National ID must be at least 16 digits",
-                        },
-                        maxLength: {
-                          value: 16,
-                          message: "National ID must not exceed 16 digits",
-                        },
-                      })}
-                    />
-                    {errors.nationalID && (
-                      <p className="text-red-500 text-sm mt-1">
-                        {errors.nationalID?.message}
                       </p>
                     )}
                   </div>
@@ -442,28 +474,29 @@ export default function Register() {
                 </Card>
               </div>
             )}
-
-            <div className="flex justify-between mt-4">
-              {step > 0 && (
-                <Button type="reset" variant="outline" onClick={handleBack}>
-                  Back
-                </Button>
-              )}
-              {step < steps.length - 1 ? (
-                <Button type="reset" onClick={handleNext}>
-                  Next
-                </Button>
-              ) : (
-                <Button type="submit" disabled={isSubmitting}>
-                  {isSubmitting ? (
-                    <Loader2 className="animate-spin" />
-                  ) : (
-                    "Submit"
-                  )}
-                </Button>
-              )}
-            </div>
           </form>
+          <div className="flex justify-between mt-4">
+            {step > 0 && (
+              <Button variant="outline" onClick={handleBack}>
+                Back
+              </Button>
+            )}
+            {step < steps.length - 1 ? (
+              <Button onClick={handleNext}>Next</Button>
+            ) : (
+              <Button
+                type="submit"
+                disabled={isSubmitting}
+                onClick={() =>
+                  formRef.current?.dispatchEvent(
+                    new Event("submit", { cancelable: true, bubbles: true })
+                  )
+                }
+              >
+                {isSubmitting ? <Loader2 className="animate-spin" /> : "Submit"}
+              </Button>
+            )}
+          </div>
         </CardContent>
       </Card>
       <Button
@@ -473,6 +506,10 @@ export default function Register() {
       >
         Check if already registered
       </Button>
+      <div className="text-center mt-4 text-sm text-gray-600">
+        Need help? Call/Text us at
+        <span className="font-semibold text-orange-600"> +250 789 152 190</span>
+      </div>
 
       <Dialog open={showModal} onOpenChange={setShowModal}>
         <DialogContent>
@@ -498,6 +535,7 @@ export default function Register() {
             className="w-full underline"
             variant="link"
             onClick={() => {
+              setStep(0);
               setShowModal(false);
               reset();
             }}
