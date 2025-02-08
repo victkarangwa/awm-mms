@@ -9,12 +9,12 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { collection, getDocs, query, where } from "firebase/firestore";
 import { Loader2, CheckCircle, XCircle } from "lucide-react"; // Import icons
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { db } from "../../lib/firebaseConfig";
+import { db } from "../../lib/firebaseConfig";  // Still import db, but it's for Realtime DB now
 import { useForm } from "react-hook-form";
+import { ref, get } from "firebase/database";  // Import Realtime Database methods
 
 interface ModalData {
   names: string;
@@ -41,17 +41,41 @@ export default function Home() {
 
   const onSubmit = async (data: CheckRegistration) => {
     setIsError(false); // Reset error state before the check
-    const usersRef = collection(db, "users");
-    const q = query(usersRef, where("nationalID", "==", data.nationalID));
-    const querySnapshot = await getDocs(q);
+    
+    // Reference to the users path in Realtime Database
+    const usersRef = ref(db, "users");
 
-    if (!querySnapshot.empty) {
-      const userData = querySnapshot.docs[0].data() as ModalData;
-      setModalData(userData);
-      setShowModal(true);
-      setIsError(false); // Success, reset error state
-    } else {
-      setIsError(true); // If no record is found, set error state
+    try {
+      // Fetch all users from the Realtime Database
+      const snapshot = await get(usersRef);
+
+      if (snapshot.exists()) {
+        // Find the user with matching nationalID
+        const users = snapshot.val();  // This will return a JSON object
+        let userFound = false;
+
+        for (const key in users) {
+          if (users[key].nationalID === data.nationalID) {
+            setModalData(users[key]);
+            userFound = true;
+            break;
+          }
+        }
+
+        if (userFound) {
+          setShowModal(true);
+          setIsError(false); // Success, reset error state
+        } else {
+          setIsError(true); // No matching record found
+          setShowModal(true);
+        }
+      } else {
+        setIsError(true); // No users in DB
+        setShowModal(true);
+      }
+    } catch (error) {
+      console.error("Error fetching data from Realtime Database:", error);
+      setIsError(true);
       setShowModal(true);
     }
   };
@@ -91,7 +115,6 @@ export default function Home() {
             </div>
             <Button
               className="mt-6 mb-2 w-full"
-              // onClick={handleCheckRegistration}
               type="submit"
               disabled={isSubmitting}
             >

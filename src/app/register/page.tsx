@@ -2,7 +2,7 @@
 
 import React, { useRef, useState } from "react";
 import { db } from "@/lib/firebaseConfig";
-import { doc, getDoc, setDoc } from "firebase/firestore";
+import { ref, get, set, push } from "firebase/database";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -35,6 +35,7 @@ interface RegistrationData {
   cell: string;
   village: string;
   isApproved: boolean;
+  timestamp: string;
 }
 
 const steps = [
@@ -71,28 +72,35 @@ export default function Register() {
     if (step > 0) setStep(step - 1);
   };
 
+  // Modified checkNationalID function using Realtime Database
   const checkNationalID = async (id: string) => {
-    if (!id) return; // Exit if no ID is entered
+    if (!id) return;
 
-    const userRef = doc(db, "users", id);
-    const userSnap = await getDoc(userRef);
+    const usersRef = ref(db, "users"); // Reference to the users list
+    const snapshot = await get(usersRef);
 
-    if (userSnap.exists()) {
-      setNationalIDExists(true); // ID is already registered
+    if (snapshot.exists()) {
+      const users = snapshot.val(); // Get all users
+      const userExists = Object.values(users).some(
+        (user: any) => user.nationalID === id
+      );
+
+      setNationalIDExists(userExists);
     } else {
-      setNationalIDExists(false); // ID is available
+      setNationalIDExists(false);
     }
   };
 
+  // Modified onSubmit function using Realtime Database
   const onSubmit = async (data: RegistrationData) => {
     try {
-      const userRef = doc(db, "users", data.nationalID);
+      const userRef = ref(db, "users"); // Reference to the specific user by ID
       data.isApproved = false;
-      await setDoc(userRef, data);
-      // router.push("/");
-      setShowModal(true);
+      data.timestamp = new Date().toISOString();
+      await push(userRef, data);  // Set the data in Realtime Database
+      setShowModal(true); // Show modal on success
     } catch (error) {
-      console.log("Error: ", error);
+      console.log("Error: ", error); // Handle error if any
     }
   };
 
@@ -305,7 +313,7 @@ export default function Register() {
             {step === 2 && (
               <div className="space-y-4">
                 <div className="grid grid-cols-1 gap-4">
-                <div>
+                  <div>
                     <label className="block text-sm font-medium text-gray-700">
                       When did join the church?
                     </label>
