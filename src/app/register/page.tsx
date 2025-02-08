@@ -27,6 +27,7 @@ interface RegistrationData {
   nationalID: string;
   profession: string;
   studied: string;
+  dateJoined: string;
   churchCell: string;
   province: string;
   district: string;
@@ -304,6 +305,22 @@ export default function Register() {
             {step === 2 && (
               <div className="space-y-4">
                 <div className="grid grid-cols-1 gap-4">
+                <div>
+                    <label className="block text-sm font-medium text-gray-700">
+                      When did join the church?
+                    </label>
+                    <Input
+                      type="date"
+                      {...register("dateJoined", {
+                        required: "Date joined is required",
+                      })}
+                    />
+                    {errors.dob && (
+                      <p className="text-red-500 text-sm mt-1">
+                        {errors.dob?.message}
+                      </p>
+                    )}
+                  </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700">
                       Church Cell
