@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
 import { Button } from "@/components/ui/button";
@@ -8,7 +9,7 @@ import "@/lib/i18n"; // Import i18n setup
 
 export default function WelcomePage() {
   const router = useRouter();
-  // const { t, i18n } = useTranslation();
+  const { t, i18n } = useTranslation();
 
   return (
     <div className="p-6 max-w-lg mx-auto">
