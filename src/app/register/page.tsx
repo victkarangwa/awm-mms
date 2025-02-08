@@ -143,7 +143,7 @@ export default function Register() {
                         },
                         setValueAs: (value) => value.trim(), // Trim input before validation
                       })}
-                      onBlur={(e) => checkNationalID(e.target.value)}
+                      onBlur={(e) => checkNationalID(e.target.value.trim())}
                     />
                     {errors.nationalID && (
                       <p className="text-red-500 text-sm mt-1">
