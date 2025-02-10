@@ -123,7 +123,7 @@ export default function Home() {
               type="submit"
               disabled={isSubmitting}
             >
-              {isSubmitting ? <Loader2 className="animate-spin" /> : "Check"}
+              {isSubmitting ? <Loader2 className="animate-spin" /> : t("check")}
             </Button>
           </form>
           <div className="relative flex items-center my-4">
