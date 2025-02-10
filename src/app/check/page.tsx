@@ -12,9 +12,11 @@ import { Input } from "@/components/ui/input";
 import { Loader2, CheckCircle, XCircle } from "lucide-react"; // Import icons
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { db } from "../../lib/firebaseConfig";  // Still import db, but it's for Realtime DB now
+import { db } from "../../lib/firebaseConfig"; // Still import db, but it's for Realtime DB now
 import { useForm } from "react-hook-form";
-import { ref, get } from "firebase/database";  // Import Realtime Database methods
+import { ref, get } from "firebase/database"; // Import Realtime Database methods
+import { useTranslation } from "react-i18next";
+import "@/lib/i18n"; // Import i18n setup
 
 interface ModalData {
   names: string;
@@ -28,6 +30,7 @@ interface CheckRegistration {
 }
 
 export default function Home() {
+  const { t } = useTranslation();
   const router = useRouter();
   const {
     register,
@@ -41,7 +44,7 @@ export default function Home() {
 
   const onSubmit = async (data: CheckRegistration) => {
     setIsError(false); // Reset error state before the check
-    
+
     // Reference to the users path in Realtime Database
     const usersRef = ref(db, "users");
 
@@ -51,7 +54,7 @@ export default function Home() {
 
       if (snapshot.exists()) {
         // Find the user with matching nationalID
-        const users = snapshot.val();  // This will return a JSON object
+        const users = snapshot.val(); // This will return a JSON object
         let userFound = false;
 
         for (const key in users) {
@@ -84,25 +87,27 @@ export default function Home() {
     <div className="p-6 max-w-2xl mx-auto">
       <Card>
         <CardHeader>
-          <h2 className="text-xl font-bold text-center">Check Registration</h2>
+          <h2 className="text-xl font-bold text-center">
+            {t("check_registration")}
+          </h2>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit(onSubmit)}>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                National ID
+                {t("national_id")}
               </label>
               <Input
-                placeholder="Enter National ID"
+                placeholder={t("enter_national_id")}
                 {...register("nationalID", {
-                  required: "National ID is required",
+                  required: t("national_id_required"),
                   minLength: {
                     value: 16,
-                    message: "National ID must be at least 16 digits",
+                    message: t("national_id_min_length"),
                   },
                   maxLength: {
                     value: 16,
-                    message: "National ID must not exceed 16 digits",
+                    message: t("national_id_max_length"),
                   },
                   setValueAs: (value) => value.trim(), // Trim input before validation
                 })}
@@ -123,7 +128,9 @@ export default function Home() {
           </form>
           <div className="relative flex items-center my-4">
             <div className="w-full border-t border-gray-300"></div>
-            <span className="px-3 text-gray-500 text-sm">OR</span>
+            <span className="px-3 text-gray-500 text-sm">
+              {t("or")}
+            </span>
             <div className="w-full border-t border-gray-300"></div>
           </div>
           <Button
@@ -131,12 +138,12 @@ export default function Home() {
             variant="secondary"
             onClick={() => router.push("/register")}
           >
-            Register
+            {t("register")}
           </Button>
         </CardContent>
       </Card>
       <div className="text-center mt-4 text-sm text-gray-600">
-        Need help? Call/Text us at
+        {t("need_help")}{" "}
         <span className="font-semibold text-orange-600"> +250 789 152 190</span>
       </div>
       <Dialog open={showModal} onOpenChange={setShowModal}>
@@ -146,25 +153,31 @@ export default function Home() {
               {isError ? (
                 <span className="text-red-500 text-center flex flex-col items-center gap-2">
                   <XCircle className="w-16 h-16" />{" "}
-                  <span>Record Not Found</span>
+                  <span>
+                    {t("record_not_found")}
+                  </span>
                 </span>
               ) : (
                 <span className="text-green-500 text-center flex flex-col items-center gap-2">
                   <CheckCircle className="w-16 h-16" />{" "}
-                  <span>Record Found</span>
+                  <span>
+                    {t("record_found")}
+                  </span>
                 </span>
               )}
             </DialogTitle>
           </DialogHeader>
           {isError ? (
             <div className="text-center">
-              <p className="py-2">No record found for this National ID.</p>
+              <p className="py-2">
+                {t("no_record_found")}
+              </p>
               <Button
                 className="my-2 w-full"
                 variant="secondary"
                 onClick={() => router.push("/register")}
               >
-                Click here to register
+                {t("click_to_register")}
               </Button>
             </div>
           ) : (
@@ -172,19 +185,27 @@ export default function Home() {
               <Card>
                 <CardContent className="p-4 space-y-3">
                   <div>
-                    <p className="font-semibold">Member</p>
+                    <p className="font-semibold">
+                      {t("member")}
+                    </p>
                     <p>{modalData?.names}</p>
                   </div>
                   <div>
-                    <p className="font-semibold">National ID</p>
+                    <p className="font-semibold">
+                      {t("national_id")}
+                    </p>
                     <p>{modalData?.nationalID}</p>
                   </div>
                   <div>
-                    <p className="font-semibold">Phone Number</p>
+                    <p className="font-semibold">
+                      {t("phone_number")}
+                    </p>
                     <p>{modalData?.phone}</p>
                   </div>
                   <div>
-                    <p className="font-semibold">Church Cell</p>
+                    <p className="font-semibold">
+                      {t("church_cell")}
+                    </p>
                     <p>{modalData?.churchCell}</p>
                   </div>
                 </CardContent>
@@ -194,7 +215,7 @@ export default function Home() {
                 variant="secondary"
                 onClick={() => setShowModal(false)}
               >
-                Close
+                {t("close")}
               </Button>
             </div>
           )}

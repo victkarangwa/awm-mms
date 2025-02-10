@@ -16,6 +16,8 @@ import { CheckCircle, Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
+import "@/lib/i18n"; // Import i18n s
 
 interface RegistrationData {
   names: string;
@@ -46,6 +48,7 @@ const steps = [
 ];
 
 export default function Register() {
+  const { t } = useTranslation();
   const router = useRouter();
   const formRef = useRef<HTMLFormElement>(null);
   const {
@@ -98,7 +101,7 @@ export default function Register() {
       const userRef = ref(db, "users"); // Reference to the specific user by ID
       data.isApproved = false;
       data.timestamp = new Date().toISOString();
-      await push(userRef, data);  // Set the data in Realtime Database
+      await push(userRef, data); // Set the data in Realtime Database
       setShowModal(true); // Show modal on success
     } catch (error) {
       console.log("Error: ", error); // Handle error if any
@@ -108,9 +111,7 @@ export default function Register() {
   return (
     <div className="p-6 max-w-lg mx-auto">
       <CardHeader className="text-center">
-        <p className="text-sm text-gray-600 mt-1">
-          Please fill out the form to register as a family member.
-        </p>
+        <p className="text-sm text-gray-600 mt-1">{t("please_fill_form")}</p>
       </CardHeader>
       <Card>
         <CardHeader>
@@ -127,19 +128,19 @@ export default function Register() {
                 <div className="grid grid-cols-1 gap-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-700">
-                      National ID
+                      {t("national_id")}
                     </label>
                     <Input
-                      placeholder="Enter your National ID"
+                      placeholder={t("enter_national_id")}
                       {...register("nationalID", {
-                        required: "National ID is required",
+                        required: t("national_id_required"),
                         minLength: {
                           value: 16,
-                          message: "National ID must be at least 16 digits",
+                          message: t("national_id_min_length"),
                         },
                         maxLength: {
                           value: 16,
-                          message: "National ID must not exceed 16 digits",
+                          message: t("national_id_max_length"),
                         },
                         setValueAs: (value) => value.trim(), // Trim input before validation
                       })}
@@ -152,18 +153,18 @@ export default function Register() {
                     )}
                     {nationalIDExists && (
                       <p className="text-red-500 text-sm mt-1">
-                        This National ID is already registered
+                        {t("national_id_exists")}
                       </p>
                     )}
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700">
-                      Full Name
+                      {t("full_name")}
                     </label>
                     <Input
-                      placeholder="Enter your full name"
+                      placeholder={t("enter_full_name")}
                       {...register("names", {
-                        required: "Full name is required",
+                        required: t("full_name_required"),
                       })}
                     />
                     {errors.names && (
@@ -174,12 +175,12 @@ export default function Register() {
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700">
-                      Date of Birth
+                      {t("dob")}
                     </label>
                     <Input
                       type="date"
                       {...register("dob", {
-                        required: "Date of birth is required",
+                        required: t("dob_required"),
                       })}
                     />
                     {errors.dob && (
@@ -190,17 +191,17 @@ export default function Register() {
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700">
-                      Gender
+                      {t("gender")}
                     </label>
                     <select
                       className="border border-gray-300 rounded-md p-2 w-full"
                       {...register("gender", {
-                        required: "Gender is required",
+                        required: t("gender_required"),
                       })}
                     >
-                      <option value="">Select Gender</option>
-                      <option value="Male">Male</option>
-                      <option value="Female">Female</option>
+                      <option value="">{t("select_gender")}</option>
+                      <option value="Male">{t("male")}</option>
+                      <option value="Female">{t("female")}</option>
                     </select>
                     {errors.gender && (
                       <p className="text-red-500 text-sm mt-1">
@@ -210,18 +211,18 @@ export default function Register() {
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700">
-                      Marital Status
+                      {t("marital_status")}
                     </label>
                     <select
                       className="border border-gray-300 rounded-md p-2 w-full"
                       {...register("maritalStatus", {
-                        required: "Marital status is required",
+                        required: t("marital_status_required"),
                       })}
                     >
-                      <option value="">Select Status</option>
-                      <option value="Single">Single</option>
-                      <option value="Married">Married</option>
-                      <option value="Divorced">Divorced</option>
+                      <option value="">{t("select_status")}</option>
+                      <option value="Single">{t("single")}</option>
+                      <option value="Married">{t("married")}</option>
+                      <option value="Divorced">{t("divorced")}</option>
                     </select>
                     {errors.maritalStatus && (
                       <p className="text-red-500 text-sm mt-1">
@@ -238,13 +239,13 @@ export default function Register() {
                 <div className="grid grid-cols-1 gap-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-700">
-                      Phone Number
+                      {t("phone")}
                     </label>
                     <Input
                       type="tel"
-                      placeholder="Enter your phone number"
+                      placeholder={t("enter_phone")}
                       {...register("phone", {
-                        required: "Phone number is required",
+                        required: t("phone_required"),
                       })}
                     />
                     {errors.phone && (
@@ -255,17 +256,17 @@ export default function Register() {
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700">
-                      Email
+                      {t("email")}
                     </label>
                     <Input
                       type="email"
                       placeholder="Enter your email"
                       {...register("email", {
-                        required: "Email is required",
+                        required: t("email_required"),
                         pattern: {
                           value:
                             /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/,
-                          message: "Invalid email address",
+                          message: t("email_invalid"),
                         },
                       })}
                     />
@@ -277,12 +278,12 @@ export default function Register() {
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700">
-                      Profession
+                      {t("profession")}
                     </label>
                     <Input
-                      placeholder="Enter your profession"
+                      placeholder={t("enter_profession")}
                       {...register("profession", {
-                        required: "Profession is required",
+                        required: t("profession_required"),
                       })}
                     />
                     {errors.profession && (
@@ -293,12 +294,12 @@ export default function Register() {
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700">
-                      Field of Study
+                      {t("field_of_study")}
                     </label>
                     <Input
-                      placeholder="Enter what you studied"
+                      placeholder={t("enter_study")}
                       {...register("studied", {
-                        required: "Field of study is required",
+                        required: t("field_of_study_required"),
                       })}
                     />
                     {errors.studied && (
@@ -316,12 +317,12 @@ export default function Register() {
                 <div className="grid grid-cols-1 gap-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-700">
-                      When did join the church?
+                      {t("date_joined")}
                     </label>
                     <Input
                       type="date"
                       {...register("dateJoined", {
-                        required: "Date joined is required",
+                        required: t("date_joined_required"),
                       })}
                     />
                     {errors.dob && (
@@ -332,12 +333,12 @@ export default function Register() {
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700">
-                      Church Cell
+                      {t("church_cell")}
                     </label>
                     <Input
-                      placeholder="Enter your church cell"
+                      placeholder={t("enter_church_cell")}
                       {...register("churchCell", {
-                        required: "Church cell is required",
+                        required: t("church_cell_required"),
                       })}
                     />
                     {errors.churchCell && (
@@ -348,12 +349,12 @@ export default function Register() {
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700">
-                      Province
+                      {t("province")}
                     </label>
                     <Input
-                      placeholder="Enter your province"
+                      placeholder={t("enter_province")}
                       {...register("province", {
-                        required: "Province is required",
+                        required: t("province_required"),
                       })}
                     />
                     {errors.province && (
@@ -364,12 +365,12 @@ export default function Register() {
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700">
-                      District
+                      {t("district")}
                     </label>
                     <Input
-                      placeholder="Enter your district"
+                      placeholder={t("enter_district")}
                       {...register("district", {
-                        required: "District is required",
+                        required: t("district_required"),
                       })}
                     />
                     {errors.district && (
@@ -380,12 +381,12 @@ export default function Register() {
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700">
-                      Sector
+                      {t("sector")}
                     </label>
                     <Input
-                      placeholder="Enter your sector"
+                      placeholder={t("enter_sector")}
                       {...register("sector", {
-                        required: "Sector is required",
+                        required: t("sector_required"),
                       })}
                     />
                     {errors.sector && (
@@ -396,12 +397,12 @@ export default function Register() {
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700">
-                      Cell
+                      {t("cell")}
                     </label>
                     <Input
-                      placeholder="Enter your cell"
+                      placeholder={t("enter_cell")}
                       {...register("cell", {
-                        required: "Cell is required",
+                        required: t("cell_required"),
                       })}
                     />
                     {errors.cell && (
@@ -412,12 +413,12 @@ export default function Register() {
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700">
-                      Village
+                      {t("village")}
                     </label>
                     <Input
-                      placeholder="Enter your village"
+                      placeholder={t("enter_village")}
                       {...register("village", {
-                        required: "Village is required",
+                        required: t("village_required"),
                       })}
                     />
                     {errors.village && (
@@ -436,63 +437,63 @@ export default function Register() {
                   <CardContent className="p-4 space-y-3">
                     <div className="grid grid-cols-2 gap-4 text-sm">
                       <div>
-                        <p className="font-semibold">Full Name:</p>
+                        <p className="font-semibold">{t("full_name")}:</p>
                         <p>{getValues("names")}</p>
                       </div>
                       <div>
-                        <p className="font-semibold">Date of Birth:</p>
+                        <p className="font-semibold">{t("dob")}:</p>
                         <p>{getValues("dob")}</p>
                       </div>
                       <div>
-                        <p className="font-semibold">Gender:</p>
+                        <p className="font-semibold">{t("gender")}:</p>
                         <p>{getValues("gender")}</p>
                       </div>
                       <div>
-                        <p className="font-semibold">Marital Status:</p>
+                        <p className="font-semibold">{t("marital_status")}:</p>
                         <p>{getValues("maritalStatus")}</p>
                       </div>
                       <div>
-                        <p className="font-semibold">Phone:</p>
+                        <p className="font-semibold">{t("phone")}:</p>
                         <p>{getValues("phone")}</p>
                       </div>
                       <div>
-                        <p className="font-semibold">Email:</p>
+                        <p className="font-semibold">{t("email")}:</p>
                         <p>{getValues("email")}</p>
                       </div>
                       <div>
-                        <p className="font-semibold">National ID:</p>
+                        <p className="font-semibold">{t("national_id")}:</p>
                         <p>{getValues("nationalID")}</p>
                       </div>
                       <div>
-                        <p className="font-semibold">Profession:</p>
+                        <p className="font-semibold">{t("profession")}:</p>
                         <p>{getValues("profession")}</p>
                       </div>
                       <div>
-                        <p className="font-semibold">Studied:</p>
+                        <p className="font-semibold">{t("field_of_study")}:</p>
                         <p>{getValues("studied")}</p>
                       </div>
                       <div>
-                        <p className="font-semibold">Church Cell:</p>
+                        <p className="font-semibold">{t("church_cell")}:</p>
                         <p>{getValues("churchCell")}</p>
                       </div>
                       <div>
-                        <p className="font-semibold">Province:</p>
+                        <p className="font-semibold">{t("province")}:</p>
                         <p>{getValues("province")}</p>
                       </div>
                       <div>
-                        <p className="font-semibold">District:</p>
+                        <p className="font-semibold">{t("district")}:</p>
                         <p>{getValues("district")}</p>
                       </div>
                       <div>
-                        <p className="font-semibold">Sector:</p>
+                        <p className="font-semibold">{t("sector")}:</p>
                         <p>{getValues("sector")}</p>
                       </div>
                       <div>
-                        <p className="font-semibold">Cell:</p>
+                        <p className="font-semibold">{t("cell")}:</p>
                         <p>{getValues("cell")}</p>
                       </div>
                       <div>
-                        <p className="font-semibold">Village:</p>
+                        <p className="font-semibold">{t("village")}:</p>
                         <p>{getValues("village")}</p>
                       </div>
                     </div>
@@ -504,11 +505,11 @@ export default function Register() {
           <div className="flex justify-between mt-4">
             {step > 0 && (
               <Button variant="outline" onClick={handleBack}>
-                Back
+                {t("back")}
               </Button>
             )}
             {step < steps.length - 1 ? (
-              <Button onClick={handleNext}>Next</Button>
+              <Button onClick={handleNext}>{t("next")}</Button>
             ) : (
               <Button
                 type="submit"
@@ -519,7 +520,11 @@ export default function Register() {
                   )
                 }
               >
-                {isSubmitting ? <Loader2 className="animate-spin" /> : "Submit"}
+                {isSubmitting ? (
+                  <Loader2 className="animate-spin" />
+                ) : (
+                  t("submit")
+                )}
               </Button>
             )}
           </div>
@@ -530,10 +535,10 @@ export default function Register() {
         variant="link"
         onClick={() => router.push("/check")}
       >
-        Check if already registered
+        {t("check_if_registered")}
       </Button>
       <div className="text-center mt-4 text-sm text-gray-600">
-        Need help? Call/Text us at
+        {t("need_help")}{" "}
         <span className="font-semibold text-orange-600"> +250 789 152 190</span>
       </div>
 
@@ -543,19 +548,19 @@ export default function Register() {
             <DialogTitle className="flex items-center justify-center">
               <span className="text-green-500 text-center flex flex-col items-center gap-2">
                 <CheckCircle className="w-16 h-16" />{" "}
-                <span>Registration Successful</span>
+                <span>{t("registration_successful")}</span>
               </span>
             </DialogTitle>
           </DialogHeader>
           <p className="text-center text-gray-500">
-            Your registration has been successfully submitted.
+            {t("registration_submitted")}
           </p>
           <Button
             className="w-full"
             variant="default"
             onClick={() => router.push("/")}
           >
-            Go Home
+            {t("go_home")}
           </Button>
           <Button
             className="w-full underline"
@@ -566,7 +571,7 @@ export default function Register() {
               reset();
             }}
           >
-            Register Another
+            {t("register_another")}
           </Button>
         </DialogContent>
       </Dialog>
