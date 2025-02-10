@@ -40,13 +40,6 @@ interface RegistrationData {
   timestamp: string;
 }
 
-const steps = [
-  "Personal Info",
-  "Contact Info",
-  "Church & Location",
-  "Review & Submit",
-];
-
 export default function Register() {
   const { t } = useTranslation();
   const router = useRouter();
@@ -63,6 +56,13 @@ export default function Register() {
   const [step, setStep] = useState(0);
   const [showModal, setShowModal] = useState<boolean>(false);
   const [nationalIDExists, setNationalIDExists] = useState(false);
+
+  const steps = [
+    t("personal_info"),
+    t("contact_info"),
+    t("church_location"),
+    t("review_submit"),
+  ];
 
   const handleNext = async () => {
     const isValid = await trigger();
