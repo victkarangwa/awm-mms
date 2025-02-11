@@ -20,27 +20,19 @@ import { useTranslation } from "react-i18next";
 import "@/lib/i18n"; // Import i18n s
 import rwanda from "@/data/rwanda";
 
-interface RegistrationData {
-  names: string;
-  phone: string;
-  email: string;
-  gender: string;
-  maritalStatus: string;
-  dob: string;
-  nationalID: string;
-  profession: string;
-  studied: string;
-  dateJoined: string;
-  a12Family: string;
-  churchCell: string;
-  province: string;
-  district: string;
-  sector: string;
-  cell: string;
-  village: string;
-  isApproved: boolean;
-  timestamp: string;
-}
+type RwandaType = {
+  [key: string]: {
+    [key: string]: {
+      [key: string]: {
+        [key: string]: string[];
+      };
+    };
+  };
+};
+
+const rwandaData: RwandaType = rwanda;
+import { memberData } from "@/types";
+
 
 export default function Register() {
   const { t } = useTranslation();
@@ -53,7 +45,7 @@ export default function Register() {
     reset,
     trigger,
     formState: { errors, isSubmitting },
-  } = useForm<RegistrationData>();
+  } = useForm<memberData>();
 
   const [step, setStep] = useState(0);
   const [showModal, setShowModal] = useState<boolean>(false);
@@ -132,7 +124,7 @@ export default function Register() {
   };
 
   // Modified onSubmit function using Realtime Database
-  const onSubmit = async (data: RegistrationData) => {
+  const onSubmit = async (data: memberData) => {
     try {
       const userRef = ref(db, "users"); // Reference to the specific user by ID
       data.isApproved = false;
@@ -418,7 +410,7 @@ export default function Register() {
                     </label>
                     {/* <Input
                       placeholder={t("enter_district")}
-                      {...register("district", {
+                        Object.keys(rwandaData[selectedProvince] || {}).map(
                         required: t("district_required"),
                       })}
                     /> */}
@@ -430,7 +422,7 @@ export default function Register() {
                     >
                       <option value="">Select District</option>
                       {selectedProvince &&
-                        Object.keys(rwanda[selectedProvince] || {}).map(
+                        Object.keys(rwandaData[selectedProvince] || {}).map(
                           (district) => (
                             <option key={district} value={district}>
                               {district}
@@ -463,7 +455,7 @@ export default function Register() {
                       <option value="">Select Sector</option>
                       {selectedDistrict &&
                         Object.keys(
-                          rwanda[selectedProvince][selectedDistrict] || {}
+                          rwandaData[selectedProvince][selectedDistrict] || {}
                         ).map((sector) => (
                           <option key={sector} value={sector}>
                             {sector}
@@ -495,7 +487,7 @@ export default function Register() {
                       <option value="">Select Cell</option>
                       {selectedSector &&
                         Object.keys(
-                          rwanda[selectedProvince][selectedDistrict][
+                          rwandaData[selectedProvince][selectedDistrict][
                             selectedSector
                           ] || {}
                         ).map((cell) => (
@@ -527,7 +519,7 @@ export default function Register() {
                     >
                       <option value="">Select Village</option>
                       {selectedCell &&
-                        rwanda[selectedProvince][selectedDistrict][
+                        rwandaData[selectedProvince][selectedDistrict][
                           selectedSector
                         ][selectedCell]?.map((village) => (
                           <option key={village} value={village}>
