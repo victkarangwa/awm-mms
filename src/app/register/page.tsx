@@ -14,10 +14,11 @@ import { db } from "@/lib/firebaseConfig";
 import { get, push, ref } from "firebase/database";
 import { CheckCircle, Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useRef, useState } from "react";
+import { SetStateAction, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import "@/lib/i18n"; // Import i18n s
+import rwanda from "@/data/rwanda";
 
 interface RegistrationData {
   names: string;
@@ -30,6 +31,7 @@ interface RegistrationData {
   profession: string;
   studied: string;
   dateJoined: string;
+  a12Family: string;
   churchCell: string;
   province: string;
   district: string;
@@ -56,6 +58,40 @@ export default function Register() {
   const [step, setStep] = useState(0);
   const [showModal, setShowModal] = useState<boolean>(false);
   const [nationalIDExists, setNationalIDExists] = useState(false);
+  const [selectedProvince, setSelectedProvince] = useState("");
+  const [selectedDistrict, setSelectedDistrict] = useState("");
+  const [selectedSector, setSelectedSector] = useState("");
+  const [selectedCell, setSelectedCell] = useState("");
+
+  const handleProvinceChange = (e: {
+    target: { value: SetStateAction<string> };
+  }) => {
+    setSelectedProvince(e.target.value);
+    setSelectedDistrict("");
+    setSelectedSector("");
+    setSelectedCell("");
+  };
+
+  const handleDistrictChange = (e: {
+    target: { value: SetStateAction<string> };
+  }) => {
+    setSelectedDistrict(e.target.value);
+    setSelectedSector("");
+    setSelectedCell("");
+  };
+
+  const handleSectorChange = (e: {
+    target: { value: SetStateAction<string> };
+  }) => {
+    setSelectedSector(e.target.value);
+    setSelectedCell("");
+  };
+
+  const handleCellChange = (e: {
+    target: { value: SetStateAction<string> };
+  }) => {
+    setSelectedCell(e.target.value);
+  };
 
   const steps = [
     t("personal_info"),
@@ -101,6 +137,7 @@ export default function Register() {
       const userRef = ref(db, "users"); // Reference to the specific user by ID
       data.isApproved = false;
       data.timestamp = new Date().toISOString();
+      data.a12Family = "GAD";
       await push(userRef, data); // Set the data in Realtime Database
       setShowModal(true); // Show modal on success
     } catch (error) {
@@ -351,12 +388,24 @@ export default function Register() {
                     <label className="block text-sm font-medium text-gray-700">
                       {t("province")}
                     </label>
-                    <Input
+                    {/* <Input
                       placeholder={t("enter_province")}
                       {...register("province", {
                         required: t("province_required"),
-                      })}
-                    />
+                      })} 
+                    /> */}
+                    <select
+                      {...register("province")}
+                      onChange={handleProvinceChange}
+                      className="border border-gray-300 rounded-md p-2 w-full"
+                    >
+                      <option value="">Select Province</option>
+                      {Object.keys(rwanda).map((province) => (
+                        <option key={province} value={province}>
+                          {province}
+                        </option>
+                      ))}
+                    </select>
                     {errors.province && (
                       <p className="text-red-500 text-sm mt-1">
                         {errors.province?.message}
@@ -367,12 +416,28 @@ export default function Register() {
                     <label className="block text-sm font-medium text-gray-700">
                       {t("district")}
                     </label>
-                    <Input
+                    {/* <Input
                       placeholder={t("enter_district")}
                       {...register("district", {
                         required: t("district_required"),
                       })}
-                    />
+                    /> */}
+                    <select
+                      {...register("district")}
+                      onChange={handleDistrictChange}
+                      disabled={!selectedProvince}
+                      className="border border-gray-300 rounded-md p-2 w-full"
+                    >
+                      <option value="">Select District</option>
+                      {selectedProvince &&
+                        Object.keys(rwanda[selectedProvince] || {}).map(
+                          (district) => (
+                            <option key={district} value={district}>
+                              {district}
+                            </option>
+                          )
+                        )}
+                    </select>
                     {errors.district && (
                       <p className="text-red-500 text-sm mt-1">
                         {errors.district?.message}
@@ -383,12 +448,28 @@ export default function Register() {
                     <label className="block text-sm font-medium text-gray-700">
                       {t("sector")}
                     </label>
-                    <Input
+                    {/* <Input
                       placeholder={t("enter_sector")}
                       {...register("sector", {
                         required: t("sector_required"),
                       })}
-                    />
+                    /> */}
+                    <select
+                      {...register("sector")}
+                      onChange={handleSectorChange}
+                      disabled={!selectedDistrict}
+                      className="border border-gray-300 rounded-md p-2 w-full"
+                    >
+                      <option value="">Select Sector</option>
+                      {selectedDistrict &&
+                        Object.keys(
+                          rwanda[selectedProvince][selectedDistrict] || {}
+                        ).map((sector) => (
+                          <option key={sector} value={sector}>
+                            {sector}
+                          </option>
+                        ))}
+                    </select>
                     {errors.sector && (
                       <p className="text-red-500 text-sm mt-1">
                         {errors.sector?.message}
@@ -399,12 +480,30 @@ export default function Register() {
                     <label className="block text-sm font-medium text-gray-700">
                       {t("cell")}
                     </label>
-                    <Input
+                    {/* <Input
                       placeholder={t("enter_cell")}
                       {...register("cell", {
                         required: t("cell_required"),
                       })}
-                    />
+                    /> */}
+                    <select
+                      {...register("cell")}
+                      onChange={handleCellChange}
+                      disabled={!selectedSector}
+                      className="border border-gray-300 rounded-md p-2 w-full"
+                    >
+                      <option value="">Select Cell</option>
+                      {selectedSector &&
+                        Object.keys(
+                          rwanda[selectedProvince][selectedDistrict][
+                            selectedSector
+                          ] || {}
+                        ).map((cell) => (
+                          <option key={cell} value={cell}>
+                            {cell}
+                          </option>
+                        ))}
+                    </select>
                     {errors.cell && (
                       <p className="text-red-500 text-sm mt-1">
                         {errors.cell?.message}
@@ -415,12 +514,27 @@ export default function Register() {
                     <label className="block text-sm font-medium text-gray-700">
                       {t("village")}
                     </label>
-                    <Input
+                    {/* <Input
                       placeholder={t("enter_village")}
                       {...register("village", {
                         required: t("village_required"),
                       })}
-                    />
+                    /> */}
+                    <select
+                      {...register("village")}
+                      disabled={!selectedCell}
+                      className="border border-gray-300 rounded-md p-2 w-full"
+                    >
+                      <option value="">Select Village</option>
+                      {selectedCell &&
+                        rwanda[selectedProvince][selectedDistrict][
+                          selectedSector
+                        ][selectedCell]?.map((village) => (
+                          <option key={village} value={village}>
+                            {village}
+                          </option>
+                        ))}
+                    </select>
                     {errors.village && (
                       <p className="text-red-500 text-sm mt-1">
                         {errors.village?.message}
@@ -539,7 +653,7 @@ export default function Register() {
       </Button>
       <div className="text-center mt-4 text-sm text-gray-600">
         {t("need_help")}{" "}
-        <span className="font-semibold text-orange-600"> +250 789 152 190</span>
+        <span className="font-semibold text-[#e5b77f]"> +250 789 152 190</span>
       </div>
 
       <Dialog open={showModal} onOpenChange={setShowModal}>

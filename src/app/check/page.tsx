@@ -23,6 +23,7 @@ interface ModalData {
   nationalID: string;
   phone: string;
   churchCell: string;
+  a12Family: string;
 }
 
 interface CheckRegistration {
@@ -144,7 +145,7 @@ export default function Home() {
       </Card>
       <div className="text-center mt-4 text-sm text-gray-600">
         {t("need_help")}{" "}
-        <span className="font-semibold text-orange-600"> +250 789 152 190</span>
+        <span className="font-semibold text-[#e5b77f]"> +250 789 152 190</span>
       </div>
       <Dialog open={showModal} onOpenChange={setShowModal}>
         <DialogContent>
@@ -201,6 +202,12 @@ export default function Home() {
                       {t("phone_number")}
                     </p>
                     <p>{modalData?.phone}</p>
+                  </div>
+                  <div>
+                    <p className="font-semibold">
+                      {t("a12_family")}
+                    </p>
+                    <p>{modalData?.a12Family}</p>
                   </div>
                   <div>
                     <p className="font-semibold">
