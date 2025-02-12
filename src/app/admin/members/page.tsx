@@ -33,6 +33,8 @@ import {
 import moment from "moment";
 import DashboardStats from "@/components/dashboard/DashboardSts";
 import { exportToExcel } from "@/utils/exportToExcel";
+import { useTranslation } from "react-i18next";
+import "@/lib/i18n"; // Import i18n setup
 
 interface RegistrationData {
   id: string;
@@ -58,6 +60,8 @@ interface RegistrationData {
 }
 
 export default function RegisteredMembers() {
+  const { t } = useTranslation();
+
   const [members, setMembers] = useState<RegistrationData[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
@@ -138,39 +142,39 @@ export default function RegisteredMembers() {
           <DashboardStats />
           <Input
             type="text"
-            placeholder="Search by name, ID, phone, or email..."
+            placeholder={t("searchByNameIdEmail")}
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className=""
           />
           <div className="flex justify-between items-center mt-4">
-            <h2 className="text-lg font-semibold">Registered Members</h2>
+            <h2 className="text-lg font-semibold">{t("registeredMembers")}</h2>
             <Button
               onClick={() => exportToExcel(members, "Gad_Family_Members.xlsx")}
             >
-              Export to Excel
+              {t("exportToExcel")}
             </Button>
           </div>
         </div>
       </div>
 
       {loading ? (
-        <p className="text-center">Loading members...</p>
+        <p className="text-center">{t("loadingMembers")}</p>
       ) : members.length === 0 ? (
-        <p className="text-center">No registered members found.</p>
+        <p className="text-center">{t("noRegisteredMembersFound")}</p>
       ) : (
         <div className="overflow-x-auto  flex flex-row justify-center">
           <Card className="overflow-x-auto md:w-1/2">
             <Table className="shadow-md rounded-lg">
               <TableHeader>
                 <TableRow>
-                  <TableHead>Full Name</TableHead>
-                  <TableHead>National ID</TableHead>
-                  <TableHead>Phone</TableHead>
-                  <TableHead>Gender</TableHead>
-                  <TableHead>Marital Status</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead>Actions</TableHead>
+                  <TableHead>{t("full_name")}</TableHead>
+                  <TableHead>{t("national_id")}</TableHead>
+                  <TableHead>{t("phone_number")}</TableHead>
+                  <TableHead>{t("gender")}</TableHead>
+                  <TableHead>{t("marital_status")}</TableHead>
+                  <TableHead>{t("status")}</TableHead>
+                  <TableHead>{t("action")}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -180,16 +184,26 @@ export default function RegisteredMembers() {
                     // onClick={() => handleRowClick(member)}
                     className="cursor-pointer hover:bg-gray-100"
                   >
-                    <TableCell onClick={() => handleRowClick(member)}>{member.names}</TableCell>
-                    <TableCell onClick={() => handleRowClick(member)}>{member.nationalID}</TableCell>
-                    <TableCell onClick={() => handleRowClick(member)}>{member.phone}</TableCell>
-                    <TableCell onClick={() => handleRowClick(member)}>{member.gender}</TableCell>
-                    <TableCell onClick={() => handleRowClick(member)}>{member.maritalStatus}</TableCell>
+                    <TableCell onClick={() => handleRowClick(member)}>
+                      {member.names}
+                    </TableCell>
+                    <TableCell onClick={() => handleRowClick(member)}>
+                      {member.nationalID}
+                    </TableCell>
+                    <TableCell onClick={() => handleRowClick(member)}>
+                      {member.phone}
+                    </TableCell>
+                    <TableCell onClick={() => handleRowClick(member)}>
+                      {member.gender}
+                    </TableCell>
+                    <TableCell onClick={() => handleRowClick(member)}>
+                      {member.maritalStatus}
+                    </TableCell>
                     <TableCell onClick={() => handleRowClick(member)}>
                       {member.isApproved ? (
-                        <Badge className="bg-green-700">Approved</Badge>
+                        <Badge className="bg-green-700">{t("approved")}</Badge>
                       ) : (
-                        <Badge className="bg-yellow-500">Pending</Badge>
+                        <Badge className="bg-yellow-500">{t("pending")}</Badge>
                       )}
                     </TableCell>
                     <TableCell>
@@ -199,7 +213,7 @@ export default function RegisteredMembers() {
                           className="w-full"
                           size="sm"
                         >
-                          Approve
+                          {t("approve")}
                         </Button>
                       ) : (
                         <Button
@@ -207,7 +221,7 @@ export default function RegisteredMembers() {
                           className="bg-red-500 w-full"
                           size="sm"
                         >
-                          Inactivate
+                          {t("inactivate")}
                         </Button>
                       )}
                     </TableCell>
@@ -251,47 +265,50 @@ export default function RegisteredMembers() {
         <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>Member Details</DialogTitle>
+              <DialogTitle>{t("memberDetails")}</DialogTitle>
               <DialogDescription>{selectedMember.names}</DialogDescription>
             </DialogHeader>
             <div className="space-y-2">
               <p>
-                <strong>National ID:</strong> {selectedMember.nationalID}
+                <strong>{t("national_id")}:</strong> {selectedMember.nationalID}
               </p>
               <p>
-                <strong>Phone:</strong> {selectedMember.phone}
+                <strong>{t("phone_number")}:</strong> {selectedMember.phone}
               </p>
               <p>
-                <strong>Email:</strong> {selectedMember.email}
+                <strong>{t("email")}:</strong> {selectedMember.email}
               </p>
               <p>
-                <strong>Gender:</strong> {selectedMember.gender}
+                <strong>{t("gender")}:</strong> {selectedMember.gender}
               </p>
               <p>
-                <strong>DoB:</strong>
+                <strong>{t("dob")}:</strong>
                 {" " + moment(selectedMember.dob).format("DD MMM YYYY")}
               </p>
               <p>
-                <strong>Marital Status:</strong> {selectedMember.maritalStatus}
+                <strong>{t("marital_status")}:</strong>{" "}
+                {selectedMember.maritalStatus}
               </p>
               <p>
-                <strong>Profession:</strong> {selectedMember.profession}
+                <strong>{t("profession")}:</strong> {selectedMember.profession}
               </p>
               <p>
-                <strong>Date Joined:</strong>
+                <strong>{t("date_joined")}:</strong>
                 {" " + moment(selectedMember.dateJoined).format("DD MMM YYYY")}
               </p>
               <p>
-                <strong>Church Cell:</strong> {selectedMember.churchCell}
+                <strong>{t("church_cell")}:</strong> {selectedMember.churchCell}
               </p>
               <p>
-                <strong>Address:</strong> {selectedMember.province},{" "}
+                <strong>{t("address")}:</strong> {selectedMember.province},{" "}
                 {selectedMember.district}, {selectedMember.sector},{" "}
                 {selectedMember.cell}, {selectedMember.village}
               </p>
             </div>
             <DialogFooter>
-              <Button onClick={() => setIsModalOpen(false)}>Close</Button>
+              <Button onClick={() => setIsModalOpen(false)}>
+                {t("close")}
+              </Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>

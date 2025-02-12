@@ -1,17 +1,18 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "@/lib/firebaseConfig";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Loader2 } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { auth } from "@/lib/firebaseConfig";
+import "@/lib/i18n"; // Import i18n setup
 import { setCookie } from "cookies-next";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { Loader2 } from "lucide-react";
+import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 export default function LoginPage() {
-  const router = useRouter();
+  const { t } = useTranslation();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -23,16 +24,21 @@ export default function LoginPage() {
     setError("");
 
     try {
-      const userCredential =await signInWithEmailAndPassword(auth, email, password);
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
 
       const token = await userCredential.user.getIdToken();
 
       // Store token in cookies
       setCookie("authToken", token, { maxAge: 60 * 60 * 24, path: "/" }); // 1-day expiry
       // return res;
-      router.push("/admin/members"); // Redirect to dashboard after login
+      // router.push("/admin/members"); // Redirect to dashboard after login
+      window.location.href = "/admin/members";
     } catch {
-      setError("Invalid email or password");
+      setError(t("incorrect_credential"));
     } finally {
       setLoading(false);
     }
@@ -42,7 +48,7 @@ export default function LoginPage() {
     <div className="p-6 max-w-2xl mx-auto">
       <Card>
         <CardHeader>
-          <CardTitle className="text-center">Login</CardTitle>
+          <CardTitle className="text-center">{t("login")}</CardTitle>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleLogin} className="space-y-4">
@@ -50,7 +56,7 @@ export default function LoginPage() {
 
             <Input
               type="email"
-              placeholder="Email"
+              placeholder={t("email")}
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
@@ -58,17 +64,20 @@ export default function LoginPage() {
 
             <Input
               type="password"
-              placeholder="Password"
+              placeholder={t("password")}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
             />
 
             <Button type="submit" className="w-full" disabled={loading}>
-              {loading ? <Loader2 className="animate-spin w-5 h-5" /> : "Login"}
+              {loading ? (
+                <Loader2 className="animate-spin w-5 h-5" />
+              ) : (
+                t("login")
+              )}
             </Button>
           </form>
-
         </CardContent>
       </Card>
     </div>

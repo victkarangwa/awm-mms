@@ -2,13 +2,16 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { db } from "@/lib/firebaseConfig";
+import "@/lib/i18n"; // Import i18n setup
 import { memberData } from "@/types";
 import { get, ref } from "firebase/database";
 import { MarsIcon, UsersIcon, VenusIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import SkeletonLoading from "../Skeleton";
+import { useTranslation } from "react-i18next";
 
 export default function DashboardStats() {
+  const { t } = useTranslation();
   const [totalMembers, setTotalMembers] = useState(0);
   const [maleCount, setMaleCount] = useState(0);
   const [femaleCount, setFemaleCount] = useState(0);
@@ -58,7 +61,7 @@ export default function DashboardStats() {
         <UsersIcon className="w-8 h-8 text-blue-500 " />
         <div>
           <CardHeader>
-            <CardTitle>Total</CardTitle>
+            <CardTitle>{t("total")}</CardTitle>
           </CardHeader>
           <CardContent>
             <p className="text-3xl font-bold text-center">{totalMembers}</p>
@@ -71,7 +74,7 @@ export default function DashboardStats() {
         <MarsIcon className="w-8 h-8 text-orange-500 " />
         <div>
           <CardHeader>
-            <CardTitle>Male</CardTitle>
+            <CardTitle>{t("male")}</CardTitle>
           </CardHeader>
           <CardContent>
             <p className="text-3xl font-bold text-center">{maleCount}</p>
@@ -84,7 +87,7 @@ export default function DashboardStats() {
         <VenusIcon className="w-8 h-8 text-green-500 " />
         <div>
           <CardHeader>
-            <CardTitle>Female</CardTitle>
+            <CardTitle>{t("female")}</CardTitle>
           </CardHeader>
           <CardContent>
             <p className="text-3xl font-bold text-center">{femaleCount}</p>
