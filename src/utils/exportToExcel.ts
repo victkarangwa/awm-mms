@@ -2,6 +2,7 @@ import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
 
 export const exportToExcel = (
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   members: { [key: string]: any }[],
   fileName: string = "members.xlsx"
 ) => {

@@ -177,15 +177,15 @@ export default function RegisteredMembers() {
                 {paginatedMembers.map((member) => (
                   <TableRow
                     key={member.id}
-                    onClick={() => handleRowClick(member)}
+                    // onClick={() => handleRowClick(member)}
                     className="cursor-pointer hover:bg-gray-100"
                   >
-                    <TableCell>{member.names}</TableCell>
-                    <TableCell>{member.nationalID}</TableCell>
-                    <TableCell>{member.phone}</TableCell>
-                    <TableCell>{member.gender}</TableCell>
-                    <TableCell>{member.maritalStatus}</TableCell>
-                    <TableCell>
+                    <TableCell onClick={() => handleRowClick(member)}>{member.names}</TableCell>
+                    <TableCell onClick={() => handleRowClick(member)}>{member.nationalID}</TableCell>
+                    <TableCell onClick={() => handleRowClick(member)}>{member.phone}</TableCell>
+                    <TableCell onClick={() => handleRowClick(member)}>{member.gender}</TableCell>
+                    <TableCell onClick={() => handleRowClick(member)}>{member.maritalStatus}</TableCell>
+                    <TableCell onClick={() => handleRowClick(member)}>
                       {member.isApproved ? (
                         <Badge className="bg-green-700">Approved</Badge>
                       ) : (

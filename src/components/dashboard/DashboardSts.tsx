@@ -6,11 +6,13 @@ import { memberData } from "@/types";
 import { get, ref } from "firebase/database";
 import { MarsIcon, UsersIcon, VenusIcon } from "lucide-react";
 import { useEffect, useState } from "react";
+import SkeletonLoading from "../Skeleton";
 
 export default function DashboardStats() {
   const [totalMembers, setTotalMembers] = useState(0);
   const [maleCount, setMaleCount] = useState(0);
   const [femaleCount, setFemaleCount] = useState(0);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchStats = async () => {
@@ -33,6 +35,7 @@ export default function DashboardStats() {
           setTotalMembers(total);
           setMaleCount(males);
           setFemaleCount(females);
+          setLoading(false);
         }
       } catch (error) {
         console.error("Error fetching statistics:", error);
@@ -42,7 +45,13 @@ export default function DashboardStats() {
     fetchStats();
   }, []);
 
-  return (
+  return loading ? (
+    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 py-4">
+      <SkeletonLoading />
+      <SkeletonLoading />
+      <SkeletonLoading />
+    </div>
+  ) : (
     <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 py-4">
       {/* Total Members Card */}
       <Card className="shadow-md flex justify-center items-center bg-blue-100 border-blue-500">
