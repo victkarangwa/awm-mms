@@ -32,6 +32,7 @@ import {
 } from "@/components/ui/dialog";
 import moment from "moment";
 import DashboardStats from "@/components/dashboard/DashboardSts";
+import { exportToExcel } from "@/utils/exportToExcel";
 
 interface RegistrationData {
   id: string;
@@ -131,9 +132,6 @@ export default function RegisteredMembers() {
 
   return (
     <div className="p-4">
-      <h1 className="text-2xl font-bold mb-4 text-center">
-        Registered Members
-      </h1>
       {/* Search Input */}
       <div className="mb-4 flex justify-center">
         <div className=" w-full md:w-1/2">
@@ -145,6 +143,14 @@ export default function RegisteredMembers() {
             onChange={(e) => setSearch(e.target.value)}
             className=""
           />
+          <div className="flex justify-between items-center mt-4">
+            <h2 className="text-lg font-semibold">Registered Members</h2>
+            <Button
+              onClick={() => exportToExcel(members, "Gad_Family_Members.xlsx")}
+            >
+              Export to Excel
+            </Button>
+          </div>
         </div>
       </div>
 
