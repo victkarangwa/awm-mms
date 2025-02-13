@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { useState, useEffect } from "react";
@@ -35,6 +36,12 @@ import DashboardStats from "@/components/dashboard/DashboardSts";
 import { exportToExcel } from "@/utils/exportToExcel";
 import { useTranslation } from "react-i18next";
 import "@/lib/i18n"; // Import i18n setup
+import {
+  getMemberContributions,
+  getMonthShortName,
+  updateMemberContribution,
+} from "@/utils/contributions";
+import { Checkbox } from "@/components/ui/checkbox";
 
 interface RegistrationData {
   id: string;
@@ -70,6 +77,7 @@ export default function RegisteredMembers() {
     null
   );
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [contributions, setContributions] = useState<any>(null);
   const pageSize = 10; // Adjust the number of items per page
 
   useEffect(() => {
@@ -130,8 +138,62 @@ export default function RegisteredMembers() {
 
   // Open Modal with Selected Member
   const handleRowClick = (member: RegistrationData) => {
+    getMemberContributions(member.nationalID).then((data) => {
+      console.log("Contributions:", data);
+      setContributions(data);
+    });
     setSelectedMember(member);
     setIsModalOpen(true);
+  };
+
+  const ContributionComponent = ({
+    type = "One Stone Project",
+  }: {
+    type: string;
+  }) => {
+    const amount = type === "One Stone Project" ? 1000 : 500;
+    const totalContributed = Object.values(contributions?.[type] || {}).reduce(
+      (acc: number, curr: any) => acc + curr.amount, 0
+    );
+    return (
+      <div className="rounded-lg max-w-max min-w-[320px] mt-2 mb-4">
+        {/* Header Row */}
+        <h1 className="font-bold text-orange-500">{type}</h1>
+        <h2 className="text-xs font-bold">(Tot: RWF {totalContributed})</h2>
+        <div className="flex bg-gray-100 font-semibold p-2 rounded-t-lg min-w-max">
+          <div className="p-2 w-8">M</div>
+          {Array.from({ length: 12 }, (_, i) => (
+            <div key={i} className="p-2 w-8 text-center">
+              {i + 1}
+            </div>
+          ))}
+        </div>
+
+        {/* Status Row */}
+        <div className="shadow-md flex border-t p-2 min-w-max">
+          <div className="p-2 w-8 font-semibold">S</div>
+          {Array.from({ length: 12 }, (_, i) => (
+            <div key={i} className="p-2 w-8 text-center">
+              <Checkbox
+                // checked={contributions?.[type]?.[i + 1] > 0}
+                defaultChecked={
+                  contributions?.[type]?.[getMonthShortName(i)]?.amount > 0
+                }
+                onCheckedChange={(checked) => {
+                  updateMemberContribution(
+                    selectedMember?.nationalID || "",
+                    moment().year().toString(),
+                    type,
+                    getMonthShortName(i),
+                    checked ? amount : 0
+                  );
+                }}
+              />
+            </div>
+          ))}
+        </div>
+      </div>
+    );
   };
 
   return (
@@ -263,12 +325,12 @@ export default function RegisteredMembers() {
       {/* Member Details Modal */}
       {selectedMember && (
         <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-          <DialogContent>
+          <DialogContent className="w-full">
             <DialogHeader>
               <DialogTitle>{t("memberDetails")}</DialogTitle>
               <DialogDescription>{selectedMember.names}</DialogDescription>
             </DialogHeader>
-            <div className="space-y-2">
+            <div className="overflow-x-auto  space-y-2">
               <p>
                 <strong>{t("national_id")}:</strong> {selectedMember.nationalID}
               </p>
@@ -304,6 +366,11 @@ export default function RegisteredMembers() {
                 {selectedMember.district}, {selectedMember.sector},{" "}
                 {selectedMember.cell}, {selectedMember.village}
               </p>
+              <div className="overflow-x-auto">
+                {/* Create a horizontal table with month(1,2,3,4...) and status */}
+                <ContributionComponent type="One Stone Project" />
+                <ContributionComponent type="Family Contribution" />
+              </div>
             </div>
             <DialogFooter>
               <Button onClick={() => setIsModalOpen(false)}>
