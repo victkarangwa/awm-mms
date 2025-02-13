@@ -367,7 +367,6 @@ export default function RegisteredMembers() {
                 {selectedMember.cell}, {selectedMember.village}
               </p>
               <div className="overflow-x-auto">
-                {/* Create a horizontal table with month(1,2,3,4...) and status */}
                 <ContributionComponent type="One Stone Project" />
                 <ContributionComponent type="Family Contribution" />
               </div>

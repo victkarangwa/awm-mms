@@ -15,7 +15,7 @@ export function useAuthCheck(redirect: boolean = true) {
         setUser(currentUser);
       } else {
         setUser(null);
-        if (redirect) router.push("/login");
+        // if (redirect) router.push("/login");
       }
     });
 

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { Button } from "@/components/ui/button";
@@ -17,6 +18,8 @@ import { useForm } from "react-hook-form";
 import { ref, get } from "firebase/database"; // Import Realtime Database methods
 import { useTranslation } from "react-i18next";
 import "@/lib/i18n"; // Import i18n setup
+import { ContributionComponent } from "@/components/Contribution";
+import { getMemberContributions } from "@/utils/contributions";
 
 interface ModalData {
   names: string;
@@ -42,6 +45,8 @@ export default function Home() {
   const [modalData, setModalData] = useState<ModalData | null>(null);
   const [showModal, setShowModal] = useState<boolean>(false);
   const [isError, setIsError] = useState<boolean>(false); // Track error state
+  const [contributions, setContributions] = useState<any>(null);
+
 
   const onSubmit = async (data: CheckRegistration) => {
     setIsError(false); // Reset error state before the check
@@ -60,6 +65,7 @@ export default function Home() {
 
         for (const key in users) {
           if (users[key].nationalID === data.nationalID) {
+            getContribution(data.nationalID);
             setModalData(users[key]);
             userFound = true;
             break;
@@ -83,6 +89,13 @@ export default function Home() {
       setShowModal(true);
     }
   };
+
+  const getContribution = async (nationalID: string) => { 
+    getMemberContributions(nationalID).then((data) => {
+      console.log(data);
+      setContributions(data);
+    });
+  }
 
   return (
     <div className="p-6 max-w-2xl mx-auto">
@@ -129,9 +142,7 @@ export default function Home() {
           </form>
           <div className="relative flex items-center my-4">
             <div className="w-full border-t border-gray-300"></div>
-            <span className="px-3 text-gray-500 text-sm">
-              {t("or")}
-            </span>
+            <span className="px-3 text-gray-500 text-sm">{t("or")}</span>
             <div className="w-full border-t border-gray-300"></div>
           </div>
           <Button
@@ -154,25 +165,19 @@ export default function Home() {
               {isError ? (
                 <span className="text-red-500 text-center flex flex-col items-center gap-2">
                   <XCircle className="w-16 h-16" />{" "}
-                  <span>
-                    {t("record_not_found")}
-                  </span>
+                  <span>{t("record_not_found")}</span>
                 </span>
               ) : (
                 <span className="text-green-500 text-center flex flex-col items-center gap-2">
                   <CheckCircle className="w-16 h-16" />{" "}
-                  <span>
-                    {t("record_found")}
-                  </span>
+                  <span>{t("record_found")}</span>
                 </span>
               )}
             </DialogTitle>
           </DialogHeader>
           {isError ? (
             <div className="text-center">
-              <p className="py-2">
-                {t("no_record_found")}
-              </p>
+              <p className="py-2">{t("no_record_found")}</p>
               <Button
                 className="my-2 w-full"
                 variant="secondary"
@@ -182,38 +187,34 @@ export default function Home() {
               </Button>
             </div>
           ) : (
-            <div className="space-y-4 flex flex-col">
-              <Card>
+            <div className="overflow-x-auto space-y-4 flex flex-col">
+              <Card className="overflow-x-auto">
                 <CardContent className="p-4 space-y-3">
-                  <div>
-                    <p className="font-semibold">
-                      {t("member")}
-                    </p>
-                    <p>{modalData?.names}</p>
-                  </div>
-                  <div>
-                    <p className="font-semibold">
-                      {t("national_id")}
-                    </p>
-                    <p>{modalData?.nationalID}</p>
-                  </div>
-                  <div>
-                    <p className="font-semibold">
-                      {t("phone_number")}
-                    </p>
-                    <p>{modalData?.phone}</p>
-                  </div>
-                  <div>
-                    <p className="font-semibold">
-                      {t("a12_family")}
-                    </p>
-                    <p>{modalData?.a12Family}</p>
-                  </div>
-                  <div>
-                    <p className="font-semibold">
-                      {t("church_cell")}
-                    </p>
-                    <p>{modalData?.churchCell}</p>
+                  <div className="overflow-x-auto  space-y-2">
+                    <div>
+                      <p className="font-semibold">{t("member")}</p>
+                      <p>{modalData?.names}</p>
+                    </div>
+                    <div>
+                      <p className="font-semibold">{t("national_id")}</p>
+                      <p>{modalData?.nationalID}</p>
+                    </div>
+                    <div>
+                      <p className="font-semibold">{t("phone_number")}</p>
+                      <p>{modalData?.phone}</p>
+                    </div>
+                    <div>
+                      <p className="font-semibold">{t("a12_family")}</p>
+                      <p>{modalData?.a12Family}</p>
+                    </div>
+                    {/* <div className="overflow-x-auto">
+                      <p className="font-semibold">{t("church_cell")}</p>
+                      <p>{modalData?.churchCell}</p>
+                    </div> */}
+                    <div className="overflow-x-auto">
+                      <ContributionComponent type="One Stone Project" contributions={contributions} />
+                      <ContributionComponent type="Family Contribution" contributions={contributions} />
+                    </div>
                   </div>
                 </CardContent>
               </Card>
