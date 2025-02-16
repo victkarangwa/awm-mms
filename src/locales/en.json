@@ -102,5 +102,6 @@
   "status":"Status",
   "action":"Action",
   "total": "Total",
-  "dear": "Dear"
+  "dear": "Dear",
+  "familyContributions": "Family Contributions"
 }

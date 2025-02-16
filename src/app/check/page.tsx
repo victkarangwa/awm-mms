@@ -212,8 +212,8 @@ export default function Home() {
                       <p>{modalData?.churchCell}</p>
                     </div> */}
                     <div className="overflow-x-auto">
-                      <ContributionComponent type="One Stone Project" contributions={contributions} />
-                      <ContributionComponent type="Family Contribution" contributions={contributions} />
+                      {/* <ContributionComponent type="One Stone Project" contributions={contributions} /> */}
+                      <ContributionComponent type="familyContributions" contributions={contributions} />
                     </div>
                   </div>
                 </CardContent>

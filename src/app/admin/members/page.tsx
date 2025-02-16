@@ -158,7 +158,7 @@ export default function RegisteredMembers() {
     return (
       <div className="rounded-lg max-w-max min-w-[320px] mt-2 mb-4">
         {/* Header Row */}
-        <h1 className="font-bold text-orange-500">{type}</h1>
+        <h1 className="font-bold text-orange-500">{t(type)}</h1>
         <h2 className="text-xs font-bold">(Tot: RWF {totalContributed})</h2>
         <div className="flex bg-gray-100 font-semibold p-2 rounded-t-lg min-w-max">
           <div className="p-2 w-8">M</div>
@@ -367,8 +367,8 @@ export default function RegisteredMembers() {
                 {selectedMember.cell}, {selectedMember.village}
               </p>
               <div className="overflow-x-auto">
-                <ContributionComponent type="One Stone Project" />
-                <ContributionComponent type="Family Contribution" />
+                {/* <ContributionComponent type="One Stone Project" /> */}
+                <ContributionComponent type="familyContributions" />
               </div>
             </div>
             <DialogFooter>
