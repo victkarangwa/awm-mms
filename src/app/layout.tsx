@@ -18,7 +18,19 @@ export const metadata: Metadata = {
   title: "Gad Family | AWM/ZTCC",
   description: "Easily check or register as a Gad family member at ZTCC Ngoma Parish.",
   icons: {
-    icon: "/favicon.png",
+    icon: "/favicon.ico",
+    shortcut: "/favicon.ico",
+    apple: "/favicon.png",
+  },
+  openGraph: {
+    title: "Gad Family | AWM/ZTCC",
+    description: "Easily check or register as a Gad family member at ZTCC Ngoma Parish.",
+    images: [
+      {
+        url: "/favicon.png",
+      },
+    ],
+    siteName: "Gad Family | AWM/ZTCC",
   },
 };
 
