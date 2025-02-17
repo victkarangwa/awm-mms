@@ -15,8 +15,11 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Gad Family",
-  description: "Gad Family Registration Form",
+  title: "Gad Family | AWM/ZTCC",
+  description: "Easily check or register as a Gad family member at ZTCC Ngoma Parish.",
+  icons: {
+    icon: "/favicon.png",
+  },
 };
 
 export default function RootLayout({
