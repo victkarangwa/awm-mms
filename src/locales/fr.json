@@ -80,7 +80,7 @@
   "check_if_registered": "Vérifier si déjà inscrit",
   "need_help": "Besoin d'aide ? Appelez/SMS au",
   "title": "Bienvenue dans la famille Gad - ZTCC Gatenga",
-  "description": "Ce formulaire aidera à vérifier si vous êtes membre de la famille Gad à Zion Temple CC Gatenga. Soyez assuré que vos informations seront stockées en toute sécurité et utilisées uniquement à des fins d'église.",
+  "description": "Ce formulaire permettra de vérifier votre inscription au Zion Temple CC, paroisse de Ngoma. Soyez assuré que vos données seront conservées en toute sécurité et utilisées uniquement à des fins ecclésiastiques.",
   "checkRegistration": "Vérifier l'inscription",
   "language": "Langue",
   "a12_family": "Famille A12",
@@ -103,5 +103,6 @@
   "action": "Action",
   "total": "Total",
   "dear": "Chèr(e)",
-  "familyContributions": "Contributions familiales"
+  "familyContributions": "Contributions familiales",
+  "contributions": "Contributions"
 }

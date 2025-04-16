@@ -80,7 +80,7 @@
   "check_if_registered": "Angalia kama tayari umesajiliwa",
   "need_help": "Unahitaji msaada? Tupigie/SMS kwa",
   "title": "Karibu katika Familia ya Gad - ZTCC Gatenga",
-  "description": "Fomu hii itakusaidia kuthibitisha ikiwa wewe ni mwanachama wa Familia ya Gad katika Zion Temple CC Gatenga. Hakikisha kuwa maelezo yako yatahifadhiwa kwa usalama na yatatumika tu kwa shughuli za kanisa.",
+  "description": "Fomu hii itasaidia kuthibitisha kama wewe ni mwanachama aliyesajiliwa wa Zion Temple CC, Parokia ya Ngoma. Kuwa na uhakika, maelezo yako yatahifadhiwa kwa usalama na kutumika kwa madhumuni ya kanisa pekee",
   "checkRegistration": "Angalia Usajili",
   "language": "Lugha",
   "a12_family": "Familia ya A12",
@@ -103,5 +103,6 @@
   "action": "Hatua",
   "total": "Jumla",
   "dear": "Mpendwa",
-  "familyContributions": "Michango ya Familia"
+  "familyContributions": "Michango ya Familia",
+  "contributions": "Michango"
 }

@@ -80,7 +80,7 @@
   "check_if_registered": "Reba niba waranditswe",
   "need_help": "Ukeneye ubufasha? Hamagara/Ohereza ubutumwa kuri",
   "title": "Murakaza neza mu muryango wa Gad - ZTCC Gatenga",
-  "description": "Iyi fomu izagufasha kumenya niba uri umunyamuryango wa Gad Family muri Zion Temple CC Gatenga. Amakuru yawe azabungabungwa neza kandi azakoreshwa gusa ku nyungu z’itorero.",
+  "description": "Iyi fomu izagufasha kumenya niba wariyandikishije nk'umunyamuryango muri Zion Temple CC, Paruwase ya Ngoma. Amakuru yawe azabungabungwa neza kandi azakoreshwa gusa ku nyungu z’itorero.",
   "checkRegistration": "Reba niba waranditswe",
   "language": "Ururimi",
   "a12_family": "Umuryango wa A12",
@@ -103,5 +103,6 @@
   "action": "Igikorwa",
   "total": "Igiteranyo",
   "dear": "Nshuti",
-  "familyContributions": "Umusanzu w'Umuryango"
+  "familyContributions": "Umusanzu w'Umuryango",
+  "contributions": "Imisanzu"
 }

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { getDatabase, ref, update, get } from "firebase/database";
 
 export async function updateMemberContribution(
@@ -42,6 +43,47 @@ export async function getMemberContributions(
   } catch (error) {
     console.error("Error fetching contributions:", error);
     return null;
+  }
+}
+
+export async function getTotalFamilyContributions(year: string) {
+  const db = getDatabase();
+  const contributionsRef = ref(db, `contributions/${year}`);
+
+  try {
+    const snapshot = await get(contributionsRef);
+    if (!snapshot.exists()) return 0;
+
+    let totalAmount = 0;
+    const data = snapshot.val();
+
+    Object.values(data).forEach((member: any) => {
+      // Sum "familyContributions"
+      if (member.familyContributions) {
+        Object.values(member.familyContributions).forEach((month: any) => {
+          totalAmount += month.amount || 0;
+        });
+      }
+
+      // Sum "Family Contribution" (alternative naming)
+      if (member["Family Contribution"]) {
+        Object.values(member["Family Contribution"]).forEach((month: any) => {
+          totalAmount += month.amount || 0;
+        });
+      }
+
+      // Sum "One Stone Project"
+      if (member["One Stone Project"]) {
+        Object.values(member["One Stone Project"]).forEach((month: any) => {
+          totalAmount += month.amount || 0;
+        });
+      }
+    });
+
+    return totalAmount;
+  } catch (error) {
+    console.error("Error fetching total contributions:", error);
+    return 0;
   }
 }
 

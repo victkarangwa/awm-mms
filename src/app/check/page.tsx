@@ -197,7 +197,11 @@ export default function Home() {
                     </div>
                     <div>
                       <p className="font-semibold">{t("national_id")}</p>
-                      <p>{modalData?.nationalID}</p>
+                      <p>
+                        {(modalData?.nationalID || "").slice(0, 4) +
+                          "******" +
+                          (modalData?.nationalID || "").slice(-3)}
+                      </p>
                     </div>
                     <div>
                       <p className="font-semibold">{t("phone_number")}</p>
@@ -213,7 +217,10 @@ export default function Home() {
                     </div> */}
                     <div className="overflow-x-auto">
                       {/* <ContributionComponent type="One Stone Project" contributions={contributions} /> */}
-                      <ContributionComponent type="familyContributions" contributions={contributions} />
+                      <ContributionComponent
+                        type="familyContributions"
+                        contributions={contributions}
+                      />
                     </div>
                   </div>
                 </CardContent>

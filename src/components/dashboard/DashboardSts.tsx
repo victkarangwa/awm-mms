@@ -9,6 +9,7 @@ import { MarsIcon, UsersIcon, VenusIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import SkeletonLoading from "../Skeleton";
 import { useTranslation } from "react-i18next";
+import { getTotalFamilyContributions } from "@/utils/contributions";
 
 export default function DashboardStats() {
   const { t } = useTranslation();
@@ -16,6 +17,19 @@ export default function DashboardStats() {
   const [maleCount, setMaleCount] = useState(0);
   const [femaleCount, setFemaleCount] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [totalContributions, setTotalContributions] = useState<number | null>(
+    null
+  );
+  const [year] = useState("2025");
+
+  useEffect(() => {
+    async function fetchData() {
+      const total = await getTotalFamilyContributions(year);
+      // console.log("-----", total)
+      setTotalContributions(total);
+    }
+    fetchData();
+  }, [year]);
 
   useEffect(() => {
     const fetchStats = async () => {
@@ -55,13 +69,13 @@ export default function DashboardStats() {
       <SkeletonLoading />
     </div>
   ) : (
-    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 py-4">
+    <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 py-4">
       {/* Total Members Card */}
       <Card className="shadow-md flex justify-center items-center bg-blue-100 border-blue-500">
         <UsersIcon className="w-8 h-8 text-blue-500 " />
         <div>
           <CardHeader>
-            <CardTitle>{t("total")}</CardTitle>
+            <CardTitle className="text-sm">{t("total")}</CardTitle>
           </CardHeader>
           <CardContent>
             <p className="text-3xl font-bold text-center">{totalMembers}</p>
@@ -74,7 +88,7 @@ export default function DashboardStats() {
         <MarsIcon className="w-8 h-8 text-orange-500 " />
         <div>
           <CardHeader>
-            <CardTitle>{t("male")}</CardTitle>
+            <CardTitle className="text-sm">{t("male")}</CardTitle>
           </CardHeader>
           <CardContent>
             <p className="text-3xl font-bold text-center">{maleCount}</p>
@@ -87,10 +101,25 @@ export default function DashboardStats() {
         <VenusIcon className="w-8 h-8 text-green-500 " />
         <div>
           <CardHeader>
-            <CardTitle>{t("female")}</CardTitle>
+            <CardTitle className="text-sm">{t("female")}</CardTitle>
           </CardHeader>
           <CardContent>
             <p className="text-3xl font-bold text-center">{femaleCount}</p>
+          </CardContent>
+        </div>
+      </Card>
+
+      {/* Total Contributions Card */}
+      <Card className="shadow-md flex justify-center items-center bg-red-100 border-red-500">
+        {/* <MarsIcon className="w-8 h-8 text-red-500 " /> */}
+        <div>
+          <CardHeader>
+            <CardTitle className="text-sm text-center">{t("contributions")}</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-3xl font-bold text-center">
+              <label className="text-sm">RWF</label> {totalContributions?.toLocaleString() || 0}
+            </p>
           </CardContent>
         </div>
       </Card>
